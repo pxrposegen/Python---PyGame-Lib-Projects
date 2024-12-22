@@ -1,5 +1,5 @@
 import pygame
-from sys import exit
+from os.path import join 
 
 pygame.init()
 
@@ -13,10 +13,12 @@ display_surface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT))
 pygame.display.set_caption("SpaceWars")
 
 # Icon
-icon_surface = pygame.image.load('assets/bronze.png')
+icon_path = join("assets","bronze.png")
+icon_surface = pygame.image.load(icon_path).convert_alpha()
 pygame.display.set_icon(icon_surface)
-# Surface
 
+# Background Image
+background_image = pygame.image.load(join("assets","Background.png")).convert_alpha()
 
 # Main
 while running: 
@@ -25,7 +27,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    display_surface.fill((0, 41, 51))
+    display_surface.fill("Maroon")
+    display_surface.blit(background_image,(-100,-100))
     pygame.display.update()
 
 pygame.quit()   
