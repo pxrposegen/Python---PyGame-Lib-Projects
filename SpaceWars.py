@@ -30,6 +30,7 @@ background.frectposition("center", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 player = ImageObject("assets/plane.png")
 player.scale(90, 50)
 player.frectposition("midleft", 10, WINDOW_HEIGHT / 2)
+player_direction = 1
 
 # Coins
 coin = ImageObject("assets/coin.png")
@@ -48,15 +49,14 @@ while running:
     # Game Elements
     display_surface.fill("Maroon")
     display_surface.blit(background.image, background.frect)
-
-    if player.frect.left > 1290:
-        player.frect.left = 10
-    player.frect.left += 0.5
-
-    display_surface.blit(player.image, player.frect)
-
     for pos in coin_positions:
         display_surface.blit(coin.image, pos)
+
+    # Player Movements
+    player.frect.top += player_direction * 0.2
+    if player.frect.bottom > WINDOW_HEIGHT or player.frect.top < 0:
+        player_direction *= -1
+    display_surface.blit(player.image, player.frect)
 
     pygame.display.update()
 
