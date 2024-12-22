@@ -9,6 +9,7 @@ WINDOW_HEIGHT = 720
 
 # Creates a Window 
 display_surface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT))
+pygame.display.set_caption("SpaceWars")
 running = True
 
 while running: 
@@ -17,4 +18,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-pygame.quit()
+    display_surface.fill((0, 41, 51))
+    pygame.display.update()
+
+pygame.quit()   
