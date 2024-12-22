@@ -7,7 +7,7 @@ pygame.init()
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
-# Creates a Window 
+# Creates a Window and Title
 display_surface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT))
 pygame.display.set_caption("SpaceWars")
 running = True
