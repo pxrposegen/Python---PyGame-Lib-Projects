@@ -9,6 +9,7 @@ pygame.init()
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 running = True
+clock = pygame.time.Clock()
 
 # Creates a Window and Title
 display_surface = pygame.display.set_mode(
@@ -56,8 +57,9 @@ while running:
     player.frect.top += player_direction * 0.2
     if player.frect.bottom > WINDOW_HEIGHT or player.frect.top < 0:
         player_direction *= -1
-    display_surface.blit(player.image, player.frect)
+    display_surface.blit(player.image, player.frect.topleft)
 
+    clock.tick(60)
     pygame.display.update()
 
 pygame.quit()
