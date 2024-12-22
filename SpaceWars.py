@@ -11,30 +11,34 @@ WINDOW_HEIGHT = 720
 running = True
 
 # Creates a Window and Title
-display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+display_surface = pygame.display.set_mode(
+    (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE
+)
 pygame.display.set_caption("SpaceWars")
 
-#Icon
+# Icon
 icon_path = join("assets", "bronze.png")
 icon_surface = pygame.image.load(icon_path).convert_alpha()
 pygame.display.set_icon(icon_surface)
 
-#Background Image
+# Background Image
 background = ImageObject("assets/Background.png")
-background.scale(WINDOW_WIDTH,WINDOW_HEIGHT)
-background.frectposition("center",WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+background.scale(WINDOW_WIDTH, WINDOW_HEIGHT)
+background.frectposition("center", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
-#Player 
+# Player
 player = ImageObject("assets/plane.png")
-player.scale(90,50)
-player.frectposition("midleft",10, WINDOW_HEIGHT/2)
+player.scale(90, 50)
+player.frectposition("midleft", 10, WINDOW_HEIGHT / 2)
 
-#Coins
+# Coins
 coin = ImageObject("assets/coin.png")
-coin.scale(35,35)
-coin_positions = [(randint(0,WINDOW_WIDTH-100),randint(0,WINDOW_HEIGHT-300)) for i in range(7)]
+coin.scale(35, 35)
+coin_positions = [
+    (randint(0, WINDOW_WIDTH - 100), randint(0, WINDOW_HEIGHT - 300)) for i in range(7)
+]
 
-#Main
+# Main
 while running:
     # Event Loop
     for event in pygame.event.get():
@@ -42,16 +46,18 @@ while running:
             running = False
 
     # Game Elements
-    display_surface.fill("Maroon") 
+    display_surface.fill("Maroon")
     display_surface.blit(background.image, background.frect)
 
-    if player.frect.left > 1290: 
+    if player.frect.left > 1290:
         player.frect.left = 10
     player.frect.left += 0.5
 
     display_surface.blit(player.image, player.frect)
+
     for pos in coin_positions:
         display_surface.blit(coin.image, pos)
+
     pygame.display.update()
 
 pygame.quit()
