@@ -31,17 +31,20 @@ background.frectposition("center", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 player = ImageObject("assets/plane.png")
 player.scale(90, 50)
 player.frectposition("midleft", 10, WINDOW_HEIGHT / 2)
-player_direction = 1
+player_direction = pygame.math.Vector2(2,-1)
+player_speed = 100
 
 # Coins
 coin = ImageObject("assets/coin.png")
 coin.scale(35, 35)
-coin_positions = [
+coin_positions = {
     (randint(0, WINDOW_WIDTH - 100), randint(0, WINDOW_HEIGHT - 300)) for i in range(7)
-]
+}
 
 # Main
 while running:
+    # Frame Rendering readjusted with Delta Time 
+    delta = clock.tick(240) / 1000 # Return value converted from ms to s
     # Event Loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -54,12 +57,9 @@ while running:
         display_surface.blit(coin.image, pos)
 
     # Player Movements
-    player.frect.top += player_direction * 0.2
-    if player.frect.bottom > WINDOW_HEIGHT or player.frect.top < 0:
-        player_direction *= -1
-    display_surface.blit(player.image, player.frect.topleft)
+    player.frect.center += player_direction * player_speed * delta
+    display_surface.blit(player.image, player.frect)
 
-    clock.tick(60)
     pygame.display.update()
 
 pygame.quit()
