@@ -2,12 +2,13 @@ import pygame
 from os.path import join
 from random import randint, uniform
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups):
         super().__init__(groups)
         self.image = pygame.image.load(join("assets", "plane.png"))
         self.image = pygame.transform.scale(self.image, (110, 110))
-        self.rect = self.image.get_frect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT-50))
+        self.rect = self.image.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
         self.direction = pygame.math.Vector2()
         self.speed = 350
 
@@ -30,42 +31,45 @@ class Player(pygame.sprite.Sprite):
             self.direction.normalize() if self.direction else self.direction
         )
         self.rect.center += self.direction * self.speed * delta_time
-        
+
         if keys[pygame.K_LSHIFT]:
-            self.speed = 500 
-        else: 
-            self.speed = 350 
-            
+            self.speed = 500
+        else:
+            self.speed = 350
+
         if pygame.mouse.get_just_pressed()[0] and self.can_shoot:
-            Laser(laser_image,self.rect.midtop,all_sprites)
+            Laser(laser_image, self.rect.midtop, all_sprites)
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
 
         self.laser_timer()
 
+
 class Laser(pygame.sprite.Sprite):
     def __init__(self, surface, position, groups):
         super().__init__(groups)
         self.image = surface
-        self.rect = self.image.get_frect(midbottom = position)
+        self.rect = self.image.get_frect(midbottom=position)
 
-    def update(self,delta):
+    def update(self, delta):
         self.rect.centery -= 700 * delta
-        if self.rect.bottom < 0: 
+        if self.rect.bottom < 0:
             self.kill()
 
+
 class Asteroid(pygame.sprite.Sprite):
-    def __init__(self,surface,position,groups):
+    def __init__(self, surface, position, groups):
         super().__init__(groups)
         self.image = surface
-        self.rect = self.image.get_frect(center = position)
-        self.direction = pygame.math.Vector2(uniform(-0.5,0.5),1)
-        self.speed = randint(300,500)
+        self.rect = self.image.get_frect(center=position)
+        self.direction = pygame.math.Vector2(uniform(-0.5, 0.5), 1)
+        self.speed = randint(300, 500)
 
     def update(self, delta):
         self.rect.center += self.direction * self.speed * delta
         if self.rect.top > WINDOW_HEIGHT:
             self.kill()
+
 
 pygame.init()
 
@@ -92,16 +96,16 @@ background_image_rect = background_image.get_frect(
 )
 
 # Laser
-laser_image = pygame.image.load(join("assets","Laser.png")).convert_alpha()
-laser_image = pygame.transform.scale(laser_image,(15,75))
+laser_image = pygame.image.load(join("assets", "Laser.png")).convert_alpha()
+laser_image = pygame.transform.scale(laser_image, (15, 75))
 
 # Asteroids
-asteroid_image = pygame.image.load(join("assets","asteroid.png")).convert_alpha()
-asteroid_image = pygame.transform.scale(asteroid_image,(100,100))
+asteroid_image = pygame.image.load(join("assets", "asteroid.png")).convert_alpha()
+asteroid_image = pygame.transform.scale(asteroid_image, (100, 100))
 asteroid_event = pygame.event.custom_type()
-pygame.time.set_timer(asteroid_event,1000)
+pygame.time.set_timer(asteroid_event, 1000)
 
-#Sprite Groups
+# Sprite Groups
 all_sprites = pygame.sprite.Group()
 player = Player(all_sprites)
 
@@ -112,9 +116,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
+
         if event.type == asteroid_event:
-            Asteroid(asteroid_image,(randint(0,WINDOW_WIDTH),0),all_sprites)
+            Asteroid(asteroid_image, (randint(0, WINDOW_WIDTH), 0), all_sprites)
     # Update
     all_sprites.update(delta)
 
