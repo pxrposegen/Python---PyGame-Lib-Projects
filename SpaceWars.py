@@ -31,8 +31,8 @@ background.frectposition("center", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 player = ImageObject("assets/plane.png")
 player.scale(90, 50)
 player.frectposition("midleft", 10, WINDOW_HEIGHT / 2)
-player_direction = pygame.math.Vector2(2,-1)
-player_speed = 100
+player_direction = pygame.math.Vector2()
+player_speed = 300
 
 # Coins
 coin = ImageObject("assets/coin.png")
@@ -43,23 +43,32 @@ coin_positions = {
 
 # Main
 while running:
-    # Frame Rendering readjusted with Delta Time 
-    delta = clock.tick(240) / 1000 # Return value converted from ms to s
+    # Frame Rendering readjusted with Delta Time
+    delta = clock.tick(240) / 1000  # Return value converted from ms to s
+
     # Event Loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    # Player Movement Input
+    keys = pygame.key.get_pressed()
+    player_direction.x = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
+    player_direction.y = int(keys[pygame.K_s]) - int(keys[pygame.K_w])
+
+    # Diagonal player speed would increase, Consistent speed can be achieved with Normalizing
+    # if player_direction returns false if vector is [0,0] and true if it's any other value
+    player_direction = (
+        player_direction.normalize() if player_direction else player_direction
+    )
+    player.frect.center += player_direction * player_speed * delta
 
     # Game Elements
     display_surface.fill("Maroon")
     display_surface.blit(background.image, background.frect)
     for pos in coin_positions:
         display_surface.blit(coin.image, pos)
-
-    # Player Movements
-    player.frect.center += player_direction * player_speed * delta
     display_surface.blit(player.image, player.frect)
-
     pygame.display.update()
 
 pygame.quit()
