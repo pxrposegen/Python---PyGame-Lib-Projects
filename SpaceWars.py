@@ -1,5 +1,6 @@
 import pygame
 from os.path import join
+from random import randint
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups):
@@ -45,6 +46,20 @@ class Laser(pygame.sprite.Sprite):
 
     def update(self,delta):
         self.rect.centery -= 350 * delta
+        if self.rect.bottom < 0: 
+            self.kill()
+
+class Asteroid(pygame.sprite.Sprite):
+    def __init__(self,surface,position,groups):
+        super().__init__(groups)
+        self.image = surface
+        self.rect = self.image.get_frect(center = position)
+
+    def update(self, delta):
+        self.rect.centery += 200 * delta
+        if self.rect.bottom > WINDOW_HEIGHT:
+            self.kill()
+
 pygame.init()
 
 # Window Constants, DO NOT CHANGE
@@ -70,14 +85,14 @@ background_image_rect = background_image.get_frect(
 )
 
 # Laser
-laser_image = pygame.image.load(join("assets","Laser.png"))
+laser_image = pygame.image.load(join("assets","Laser.png")).convert_alpha()
 laser_image = pygame.transform.scale(laser_image,(15,75))
 
 # Asteroids
-asteroid_image = pygame.image.load(join("assets","asteroid.png"))
+asteroid_image = pygame.image.load(join("assets","asteroid.png")).convert_alpha()
 asteroid_image = pygame.transform.scale(asteroid_image,(100,100))
 asteroid_event = pygame.event.custom_type()
-pygame.time.set_timer(asteroid_event,500)
+pygame.time.set_timer(asteroid_event,1000)
 
 #Sprite Groups
 all_sprites = pygame.sprite.Group()
@@ -91,6 +106,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
+        if event.type == asteroid_event:
+            Asteroid(asteroid_image,(randint(0,WINDOW_WIDTH),0),all_sprites)
     # Update
     all_sprites.update(delta)
 
@@ -100,4 +117,5 @@ while running:
     all_sprites.draw(display_surface)
 
     pygame.display.update()
+
 pygame.quit()
