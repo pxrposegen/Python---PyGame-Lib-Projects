@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
         # Laser
         self.can_shoot = True
-        self.cooldown_duration = 1000
+        self.cooldown_duration = 500
         self.laser_shoot_time = 0
 
     def laser_timer(self):
@@ -31,12 +31,20 @@ class Player(pygame.sprite.Sprite):
         self.rect.center += self.direction * self.speed * delta_time
 
         if pygame.mouse.get_just_pressed()[0] and self.can_shoot:
-            print("Fire Laser")
+            Laser(laser_image,self.rect.midtop,all_sprites)
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
 
         self.laser_timer()
 
+class Laser(pygame.sprite.Sprite):
+    def __init__(self, surface, position, groups):
+        super().__init__(groups)
+        self.image = surface
+        self.rect = self.image.get_frect(midbottom = position)
+
+    def update(self,delta):
+        self.rect.centery -= 350 * delta
 pygame.init()
 
 # Window Constants, DO NOT CHANGE
@@ -61,7 +69,13 @@ background_image_rect = background_image.get_frect(
     center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 )
 
+# Laser
+laser_image = pygame.image.load(join("assets","Laser.png"))
+laser_image = pygame.transform.scale(laser_image,(15,75))
+
 # Asteroids
+asteroid_image = pygame.image.load(join("assets","asteroid.png"))
+asteroid_image = pygame.transform.scale(asteroid_image,(100,100))
 asteroid_event = pygame.event.custom_type()
 pygame.time.set_timer(asteroid_event,500)
 
