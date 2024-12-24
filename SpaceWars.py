@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.image.load(join("assets", "plane.png"))
         self.image = pygame.transform.scale(self.image, (110, 110))
-        self.rect = self.image.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
+        self.rect = self.image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
         self.direction = pygame.math.Vector2()
         self.speed = 350
 
@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.cooldown_duration = 500
         self.laser_shoot_time = 0
 
-        # Mask 
+        # Mask
         self.mask = pygame.mask.from_surface(self.image)
 
     def laser_timer(self):
@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.speed = 350
 
-        if pygame.mouse.get_just_pressed()[0] and self.can_shoot:
+        if pygame.mouse.get_pressed()[0] and self.can_shoot:
             Laser(laser_image, self.rect.midtop, (all_sprites, laser_sprites))
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
@@ -52,7 +52,7 @@ class Laser(pygame.sprite.Sprite):
     def __init__(self, surface, position, groups):
         super().__init__(groups)
         self.image = surface
-        self.rect = self.image.get_frect(midbottom=position)
+        self.rect = self.image.get_rect(midbottom=position)
 
     def update(self, delta):
         self.rect.centery -= 700 * delta
@@ -64,7 +64,7 @@ class Asteroid(pygame.sprite.Sprite):
     def __init__(self, surface, position, speed, groups):
         super().__init__(groups)
         self.image = surface
-        self.rect = self.image.get_frect(center=position)
+        self.rect = self.image.get_rect(center=position)
         self.direction = pygame.math.Vector2(
             uniform(-0.5, 0.5), 1
         )  # Directional Asteroids
@@ -84,21 +84,26 @@ def collision():
     global score
 
     # Collision between Asteroid and Player Ship
-    destoryed_ship = pygame.sprite.spritecollide(player, asteroid_sprite, True, pygame.sprite.collide_mask)
+    destoryed_ship = pygame.sprite.spritecollide(
+        player, asteroid_sprite, True, pygame.sprite.collide_mask
+    )
     if destoryed_ship:
         running = False
 
     # Collision between Laser and Asteroid
     for laser in laser_sprites:
-        destroyed_asteroid = pygame.sprite.spritecollide(laser, asteroid_sprite, True, pygame.sprite.collide_mask)
+        destroyed_asteroid = pygame.sprite.spritecollide(
+            laser, asteroid_sprite, True, pygame.sprite.collide_mask
+        )
         if destroyed_asteroid:
             score += 1
             laser.kill()
 
+
 # Function for Display Score
 def display_score():
     score_text = game_font.render(str(score), False, (240, 240, 240))
-    score_rect = score_text.get_frect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
+    score_rect = score_text.get_rect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
     display_surface.blit(score_text, score_rect)
     pygame.draw.rect(display_surface, (240, 240, 240), score_rect.inflate(20, 20), 5, 5)
 
@@ -111,7 +116,9 @@ WINDOW_HEIGHT = 720
 
 running = True
 clock = pygame.time.Clock()
-display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+display_surface = pygame.display.set_mode(
+    (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE
+)
 
 # Window Icon and Title
 icon_image = pygame.image.load(join("assets", "bronze.png")).convert_alpha()
@@ -120,12 +127,13 @@ pygame.display.set_caption("SpaceWars.py")
 
 # Background Image
 background_image = pygame.image.load(join("assets", "Background.jpg")).convert_alpha()
-background_image = pygame.transform.scale(
-    background_image, (WINDOW_WIDTH, WINDOW_HEIGHT)
-)
-background_image_rect = background_image.get_frect(
-    center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-)
+
+
+def scale_background(image, width, height):
+    return pygame.transform.scale(image, (width, height))
+
+
+scaled_background = scale_background(background_image, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # Laser
 laser_image = pygame.image.load(join("assets", "Laser.png")).convert_alpha()
@@ -140,7 +148,6 @@ asteroid_image_2 = pygame.transform.scale(asteroid_image_2, (80, 80))
 # Font
 score = 0
 game_font = pygame.font.Font(join("font", "04B_30__.TTF"), 25)
-
 
 # Spawns Asteroids at Custom Intervals
 asteroid_event = pygame.event.custom_type()
@@ -179,6 +186,16 @@ while running:
                     (all_sprites, asteroid_sprite),
                 )
 
+        # Handle Window Resize
+        if event.type == pygame.VIDEORESIZE:
+            WINDOW_WIDTH, WINDOW_HEIGHT = event.w, event.h
+            display_surface = pygame.display.set_mode(
+                (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE
+            )
+            scaled_background = scale_background(
+                background_image, WINDOW_WIDTH, WINDOW_HEIGHT
+            )
+
     # Update
     all_sprites.update(delta)
 
@@ -187,7 +204,7 @@ while running:
 
     # Display loop
     display_surface.fill((20, 40, 48))
-    display_surface.blit(background_image, background_image_rect)
+    display_surface.blit(scaled_background, (0, 0))
 
     # Score
     display_score()
