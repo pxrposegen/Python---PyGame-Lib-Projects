@@ -95,9 +95,10 @@ def collision():
 
 # Function for Display Score
 def display_score():
-    score_text = game_font.render(str(score), True, (240, 240, 240))
+    score_text = game_font.render(str(score), False, (240, 240, 240))
     score_rect = score_text.get_frect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
     display_surface.blit(score_text, score_rect)
+    pygame.draw.rect(display_surface, (240, 240, 240), score_rect.inflate(20, 20), 5, 5)
 
 
 pygame.init()
@@ -136,7 +137,7 @@ asteroid_image_2 = pygame.transform.scale(asteroid_image_2, (80, 80))
 
 # Font
 score = 0
-game_font = pygame.font.Font(join("font", "04B_30__.TTF"), 40)
+game_font = pygame.font.Font(join("font", "04B_30__.TTF"), 25)
 
 
 # Spawns Asteroids at Custom Intervals
@@ -188,9 +189,9 @@ while running:
 
     # Score
     display_score()
-
     # Drawing Elements to Screen
     all_sprites.draw(display_surface)
+
     pygame.display.update()
 
 pygame.quit()
