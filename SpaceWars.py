@@ -110,6 +110,11 @@ def display_score():
     pygame.draw.rect(display_surface, (240, 240, 240), score_rect.inflate(20, 20), 5, 5)
 
 
+# Function for Window Scaling
+def scale_background(image, width, height):
+    return pygame.transform.scale(image, (width, height))
+
+
 pygame.init()
 
 # Window Constants, DO NOT CHANGE
@@ -129,12 +134,6 @@ pygame.display.set_caption("SpaceWars.py")
 
 # Background Image
 background_image = pygame.image.load(join("assets", "Background.jpg")).convert_alpha()
-
-
-def scale_background(image, width, height):
-    return pygame.transform.scale(image, (width, height))
-
-
 scaled_background = scale_background(background_image, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # Laser
