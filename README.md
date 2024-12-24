@@ -74,14 +74,6 @@ SpaceWars.py/
 
 ---
 
-## 🌟 Key Highlights
-
-- **Resizable Window**: The game dynamically adjusts the background and gameplay to fit any window size.
-- **Boundary Constraints**: The spaceship stays within the screen bounds at all times.
-- **Custom Events**: Asteroids spawn at random intervals for dynamic gameplay.
-
----
-
 ## 📖 Learning Outcomes
 
 This project demonstrates:
