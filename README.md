@@ -64,16 +64,6 @@ SpaceWars.py/
 |└── README.md        # This file!
 ```
 
----
-
-## 🎨 Assets Used
-
-- Spaceship and asteroid sprites: Custom-designed pixel art.
-- Background: Handcrafted to give a cosmic vibe.
-- Font: Retro-style pixel font for score display.
-
----
-
 ## 📖 Learning Outcomes
 
 This project demonstrates:
