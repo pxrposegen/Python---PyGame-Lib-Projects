@@ -35,6 +35,8 @@ class Player(pygame.sprite.Sprite):
         )
         self.rect.center += self.direction * self.speed * delta_time
 
+        self.rect.clamp_ip(pygame.Rect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
+
         if keys[pygame.K_LSHIFT]:
             self.speed = 600
         else:
