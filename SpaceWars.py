@@ -17,6 +17,9 @@ class Player(pygame.sprite.Sprite):
         self.cooldown_duration = 500
         self.laser_shoot_time = 0
 
+        # Mask 
+        self.mask = pygame.mask.from_surface(self.image)
+
     def laser_timer(self):
         if not self.can_shoot:
             current_time = pygame.time.get_ticks()
@@ -81,17 +84,16 @@ def collision():
     global score
 
     # Collision between Asteroid and Player Ship
-    destoryed_ship = pygame.sprite.spritecollide(player, asteroid_sprite, True)
+    destoryed_ship = pygame.sprite.spritecollide(player, asteroid_sprite, True, pygame.sprite.collide_mask)
     if destoryed_ship:
         running = False
 
     # Collision between Laser and Asteroid
     for laser in laser_sprites:
-        destroyed_asteroid = pygame.sprite.spritecollide(laser, asteroid_sprite, True)
+        destroyed_asteroid = pygame.sprite.spritecollide(laser, asteroid_sprite, True, pygame.sprite.collide_mask)
         if destroyed_asteroid:
             score += 1
             laser.kill()
-
 
 # Function for Display Score
 def display_score():
