@@ -78,6 +78,7 @@ class Asteroid(pygame.sprite.Sprite):
 # Function responsible for Collisions
 def collision():
     global running
+    global score
 
     # Collision between Asteroid and Player Ship
     destoryed_ship = pygame.sprite.spritecollide(player, asteroid_sprite, True)
@@ -88,7 +89,15 @@ def collision():
     for laser in laser_sprites:
         destroyed_asteroid = pygame.sprite.spritecollide(laser, asteroid_sprite, True)
         if destroyed_asteroid:
+            score += 1
             laser.kill()
+
+
+# Function for Display Score
+def display_score():
+    score_text = game_font.render(str(score), True, (240, 240, 240))
+    score_rect = score_text.get_frect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50))
+    display_surface.blit(score_text, score_rect)
 
 
 pygame.init()
@@ -124,6 +133,11 @@ asteroid_image_1 = pygame.image.load(join("assets", "asteroid1.png")).convert_al
 asteroid_image_1 = pygame.transform.scale(asteroid_image_1, (100, 100))
 asteroid_image_2 = pygame.image.load(join("assets", "asteroid2.png")).convert_alpha()
 asteroid_image_2 = pygame.transform.scale(asteroid_image_2, (80, 80))
+
+# Font
+score = 0
+game_font = pygame.font.Font(join("font", "04B_30__.TTF"), 40)
+
 
 # Spawns Asteroids at Custom Intervals
 asteroid_event = pygame.event.custom_type()
@@ -171,8 +185,12 @@ while running:
     # Display loop
     display_surface.fill((20, 40, 48))
     display_surface.blit(background_image, background_image_rect)
-    all_sprites.draw(display_surface)
 
+    # Score
+    display_score()
+
+    # Drawing Elements to Screen
+    all_sprites.draw(display_surface)
     pygame.display.update()
 
 pygame.quit()
