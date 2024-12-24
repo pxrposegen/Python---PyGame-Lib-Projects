@@ -123,7 +123,7 @@ laser_image = pygame.transform.scale(laser_image, (15, 75))
 asteroid_image_1 = pygame.image.load(join("assets", "asteroid1.png")).convert_alpha()
 asteroid_image_1 = pygame.transform.scale(asteroid_image_1, (100, 100))
 asteroid_image_2 = pygame.image.load(join("assets", "asteroid2.png")).convert_alpha()
-asteroid_image_2 = pygame.transform.scale(asteroid_image_2, (100, 100))
+asteroid_image_2 = pygame.transform.scale(asteroid_image_2, (80, 80))
 
 # Spawns Asteroids at Custom Intervals
 asteroid_event = pygame.event.custom_type()
@@ -151,7 +151,7 @@ while running:
                 Asteroid(
                     asteroid_image_1,
                     (randint(0, WINDOW_WIDTH), 0),
-                    650,
+                    600,
                     (all_sprites, asteroid_sprite),
                 )
             else:
