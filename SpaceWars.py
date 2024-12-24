@@ -33,12 +33,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.center += self.direction * self.speed * delta_time
 
         if keys[pygame.K_LSHIFT]:
-            self.speed = 500
+            self.speed = 600
         else:
             self.speed = 350
 
         if pygame.mouse.get_just_pressed()[0] and self.can_shoot:
-            Laser(laser_image, self.rect.midtop, (all_sprites,laser_sprites))
+            Laser(laser_image, self.rect.midtop, (all_sprites, laser_sprites))
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
 
@@ -58,29 +58,38 @@ class Laser(pygame.sprite.Sprite):
 
 
 class Asteroid(pygame.sprite.Sprite):
-    def __init__(self, surface, position, groups):
+    def __init__(self, surface, position, speed, groups):
         super().__init__(groups)
         self.image = surface
         self.rect = self.image.get_frect(center=position)
-        self.direction = pygame.math.Vector2(uniform(-0.5, 0.5), 1) # Directional Asteroids
-        self.speed = randint(300, 500)
+        self.direction = pygame.math.Vector2(
+            uniform(-0.5, 0.5), 1
+        )  # Directional Asteroids
+        self.speed = speed
 
     def update(self, delta):
-        self.rect.center += self.direction * self.speed * delta # Sets Asteroid Movement Speed
+        self.rect.center += (
+            self.direction * self.speed * delta
+        )  # Sets Asteroid Movement Speed
         if self.rect.top > WINDOW_HEIGHT:
             self.kill()
 
+
+# Function responsible for Collisions
 def collision():
     global running
 
-    destoryed_ship = pygame.sprite.spritecollide(player,asteroid_sprite,True)
+    # Collision between Asteroid and Player Ship
+    destoryed_ship = pygame.sprite.spritecollide(player, asteroid_sprite, True)
     if destoryed_ship:
         running = False
-    
+
+    # Collision between Laser and Asteroid
     for laser in laser_sprites:
-        destroyed_asteroid = pygame.sprite.spritecollide(laser,asteroid_sprite,True)
+        destroyed_asteroid = pygame.sprite.spritecollide(laser, asteroid_sprite, True)
         if destroyed_asteroid:
             laser.kill()
+
 
 pygame.init()
 
@@ -111,17 +120,21 @@ laser_image = pygame.image.load(join("assets", "Laser.png")).convert_alpha()
 laser_image = pygame.transform.scale(laser_image, (15, 75))
 
 # Asteroids
-asteroid_image = pygame.image.load(join("assets", "asteroid.png")).convert_alpha()
-asteroid_image = pygame.transform.scale(asteroid_image, (100, 100))
+asteroid_image_1 = pygame.image.load(join("assets", "asteroid1.png")).convert_alpha()
+asteroid_image_1 = pygame.transform.scale(asteroid_image_1, (100, 100))
+asteroid_image_2 = pygame.image.load(join("assets", "asteroid2.png")).convert_alpha()
+asteroid_image_2 = pygame.transform.scale(asteroid_image_2, (100, 100))
+
 # Spawns Asteroids at Custom Intervals
 asteroid_event = pygame.event.custom_type()
-pygame.time.set_timer(asteroid_event, 1000)
+pygame.time.set_timer(asteroid_event, 1200)
 
 # Sprite Groups
 all_sprites = pygame.sprite.Group()
 asteroid_sprite = pygame.sprite.Group()
 laser_sprites = pygame.sprite.Group()
 
+# Player Creation
 player = Player(all_sprites)
 
 while running:
@@ -134,7 +147,21 @@ while running:
 
         # Asteroid Spawn
         if event.type == asteroid_event:
-            Asteroid(asteroid_image, (randint(0, WINDOW_WIDTH), 0), (all_sprites,asteroid_sprite))
+            if randint(0, 1):
+                Asteroid(
+                    asteroid_image_1,
+                    (randint(0, WINDOW_WIDTH), 0),
+                    650,
+                    (all_sprites, asteroid_sprite),
+                )
+            else:
+                Asteroid(
+                    asteroid_image_2,
+                    (randint(0, WINDOW_WIDTH), 0),
+                    350,
+                    (all_sprites, asteroid_sprite),
+                )
+
     # Update
     all_sprites.update(delta)
 
